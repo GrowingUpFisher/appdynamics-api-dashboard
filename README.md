@@ -1,4 +1,4 @@
-![2017-06-05_16-00-23.gif](https://bitbucket.org/repo/BgkGBAX/images/1724287804-2017-06-05_16-00-23.gif)
+![New Web Stack - AppD Project.jpg](https://bitbucket.org/repo/BgkGBAX/images/1282097282-New%20Web%20Stack%20-%20AppD%20Project.jpg)
 
 # README #
 
