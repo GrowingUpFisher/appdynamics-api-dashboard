@@ -5,3 +5,10 @@ Instructions:
 - compile and build jar (Main class: com.redis.updater.Executor)
 - execute using:
   $> java -jar <path to jar>/redisUpdateHandler.jar <IP of Redis Host>  
+
+crontab configuration:
+
+- crontab -e
+- contents:
+  * * * * * java -jar <path to jar>/redisUpdateHandler.jar <IP of Redis Host>
+
