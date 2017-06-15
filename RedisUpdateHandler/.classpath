@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/jar_files/commons-pool2-2.4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/jar_files/jedis-2.9.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/commons-codec-1.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/commons-logging-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/fluent-hc-4.5.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/httpclient-4.5.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/httpclient-cache-4.5.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/httpclient-win-4.5.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/httpcore-4.4.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/httpmime-4.5.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/jna-4.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-client-4.5.3/lib/jna-platform-4.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-core-4.4.6/lib/commons-cli-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-core-4.4.6/lib/httpcore-4.4.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-core-4.4.6/lib/httpcore-ab-4.4.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/httpcomponents-core-4.4.6/lib/httpcore-nio-4.4.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/spring-framework-4.3.8.RELEASE/libs/spring-web-4.3.8.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/jackson-annotations-2.5.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/jackson-core-2.5.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/dbasak/Downloads/jackson-databind-2.5.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
