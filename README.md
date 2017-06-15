@@ -24,7 +24,7 @@ This README documents the POC architecture and whatever steps are necessary to g
 * Configuration: The configuration details are provided in the individual README files
 * Dependencies: most of the stack is java based for the datapipeline + some external JAR dependencies on Jackson, Spring, Httpcomponents, Jedis, Apache commons-pool2 and Jersey. These are included in RedisUpdateHandler/lib.
 * Database configuration: Default Elasticsearch and Redis buffer configuration.
-* Tests: Kibana should reflect the JSON documents that are being indexed by Elastic. Set auto-refresh for graphs to 1 minute and check if the data flows continuously. Alternatively, plug stdout in logstash output def and check if the jsonlets (jsonlets are the curated and marshaled metric data-point objects that are being pushed into redis from redisUpdateHandler) are being printed periodically in logstash server console.
+* Tests: Kibana should reflect the JSON documents that are being indexed by Elastic. Set auto-refresh for graphs to 1 minute and check if the data flows continuously. Alternatively, plug stdout in logstash output def and check if the jsonlets (curated and marshaled metric data-point objects that are being pushed into redis from redisUpdateHandler) are being printed periodically in logstash server console.
 * Deployment instructions are detailed in individual READMEs for each component.
 
 ### Contribution guidelines ###
