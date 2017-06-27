@@ -1,4 +1,6 @@
-![New Web Stack - AppD Project.jpg](https://bitbucket.org/repo/BgkGBAX/images/2034796307-New%20Web%20Stack%20-%20AppD%20Project.jpg)
+# Architecture (v 1.1) #
+![Screen Shot 2017-06-27 at 11.32.35 AM.png](https://bitbucket.org/repo/BgkGBAX/images/3966173583-Screen%20Shot%202017-06-27%20at%2011.32.35%20AM.png)
+
 
 # README (v 1.0) #
 
@@ -16,7 +18,6 @@ This README documents the POC architecture and whatever steps are necessary to g
   + Setting up NGINX for loadbalancing, and clustering of ELK data/visualization servers. 
   + Developing in-house visualization Front End with custom log-in and management consoles (in progress).
   + Leveraging Salesforce Account Manager for user authentication rather than hitting AppD APIs.
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
