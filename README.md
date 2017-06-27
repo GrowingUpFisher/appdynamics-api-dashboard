@@ -18,7 +18,6 @@ This README documents the POC architecture and whatever steps are necessary to g
   + Setting up NGINX for loadbalancing, and clustering of ELK data/visualization servers. 
   + Developing in-house visualization Front End with custom log-in and management consoles (in progress).
   + Leveraging Salesforce Account Manager for user authentication rather than hitting AppD APIs.
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
