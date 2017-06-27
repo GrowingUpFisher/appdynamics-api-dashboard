@@ -76,10 +76,26 @@ public class metricValues {
 	public jsonlet getXform() {
 		return xform;
 	}
-	public void setXform() {
+	public void setXform(String path, String application) {
+		String[] path_levels = path.split("[|]");
+		
 		this.xform = new jsonlet();
-		//this.xform.setCount(count);
-		this.xform.setCurrent(current);
-		this.xform.setUtc(startTimeInMillis);
+		this.xform.setTimestamp(startTimeInMillis);
+		this.xform.setValue(value);
+		this.xform.setApplication(application);
+		
+		System.out.println(path);
+		
+		for(int i=0; i<path_levels.length; i++) {
+			switch(i) {
+			case 0: this.xform.setPath_level_1(path_levels[i]); break;
+			case 1: this.xform.setPath_level_2(path_levels[i]); break;
+			case 2: this.xform.setPath_level_3(path_levels[i]); break;
+			case 3: this.xform.setPath_level_4(path_levels[i]); break;
+			case 4: this.xform.setPath_level_5(path_levels[i]); break;
+			case 5: this.xform.setPath_level_6(path_levels[i]); break;
+			case 6: this.xform.setPath_level_7(path_levels[i]); break;
+			}
+		}
 	}
 }

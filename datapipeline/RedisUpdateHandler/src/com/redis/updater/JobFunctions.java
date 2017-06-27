@@ -15,8 +15,27 @@ public class JobFunctions {
 		jedis = new Jedis(ip, 6379);
 	}
 	
-	public Map<String, String> getMetricURIList(String key) throws IOException {
+	public Map<String, String> getMetricURIList(String key, String update_lst) throws IOException {
 		if(jedis.exists(key)) {
+			if(update_lst!=null && update_lst.compareToIgnoreCase("u")==0) {
+				FileReader f = new FileReader(key+".lst");
+				BufferedReader br = new BufferedReader(f);
+				String nextLine = null;
+				
+				//read from disk and update map			
+				while((nextLine = br.readLine()) != null) {
+					if(nextLine.compareToIgnoreCase("#> stop-scan")==0) {
+						break;
+					}
+					if(nextLine.length() > 0 && nextLine.charAt(0)!='#' && jedis.hget(key, nextLine) == null) {
+						jedis.hset(key, nextLine, "0");
+					}
+				}
+				
+				br.close();
+				f.close();
+			}
+
 			return jedis.hgetAll(key);
 		} else {
 			FileReader f = new FileReader(key+".lst");
@@ -25,12 +44,15 @@ public class JobFunctions {
 			
 			//read from disk and create map			
 			while((nextLine = br.readLine()) != null) {
-				jedis.hset(key, nextLine, "0");
+				if(nextLine.length() > 0 && nextLine.charAt(0)!='#') {
+					jedis.hset(key, nextLine, "0");
+				}
 			}
 			
 			br.close();
+			f.close();
 			
-			return getMetricURIList(key);
+			return getMetricURIList(key, null);
 		}
 	}
 	
@@ -39,7 +61,7 @@ public class JobFunctions {
 	}
 	
 	public void pushMetricVal(String key, String val) throws IOException {
-		long ret = jedis.lpush(key, val);
+		long ret = jedis.lpush(key.toLowerCase(), val);
 		System.out.println(ret);
 	}
 }
