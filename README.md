@@ -1,4 +1,4 @@
-![New Web Stack - AppD Project.jpg](https://bitbucket.org/repo/BgkGBAX/images/1282097282-New%20Web%20Stack%20-%20AppD%20Project.jpg)
+![New Web Stack - AppD Project.jpg](https://bitbucket.org/repo/BgkGBAX/images/2034796307-New%20Web%20Stack%20-%20AppD%20Project.jpg)
 
 # README (v 1.0) #
 
