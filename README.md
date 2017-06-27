@@ -1,6 +1,4 @@
-# End-2-End (v 1.0) #
-![New Web Stack - AppD Project.jpg](https://bitbucket.org/repo/BgkGBAX/images/2034796307-New%20Web%20Stack%20-%20AppD%20Project.jpg)
-# Backend Architecture (v 1.1) #
+# Architecture (v 1.1) #
 ![Screen Shot 2017-06-27 at 11.32.35 AM.png](https://bitbucket.org/repo/BgkGBAX/images/3966173583-Screen%20Shot%202017-06-27%20at%2011.32.35%20AM.png)
 
 
