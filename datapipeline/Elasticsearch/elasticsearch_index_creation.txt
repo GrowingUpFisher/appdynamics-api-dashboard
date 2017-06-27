@@ -1,0 +1,55 @@
+curl -XPUT 'http://localhost:9200/apm-original/' -d '
+{
+    "settings" : {
+        "number_of_shards" : 3, 
+        "number_of_replicas" : 1
+    },
+    "mappings" : {
+        "appd" : {
+            "_all" : { "enabled" : true },
+            "properties" : {
+                "application" : { "type" : "keyword", "index": "not_analyzed" },
+
+                "path_level_1" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_2" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_3" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_4" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_5" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_6" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_7" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_8" : { "type" : "keyword", "index": "not_analyzed" },
+                
+                "timestamp" : { "type" : "date", "index": "not_analyzed" },
+                "value" : { "type" : "long", "index": "not_analyzed" }
+            }
+        }
+    }
+}'
+
+curl -XPUT 'http://localhost:9200/apm-forecast/' -d '
+{
+    "settings" : {
+        "number_of_shards" : 3, 
+        "number_of_replicas" : 1
+    },
+    "mappings" : {
+        "appd" : {
+            "_all" : { "enabled" : true },
+            "properties" : {
+                "application" : { "type" : "keyword", "index": "not_analyzed" },
+
+                "path_level_1" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_2" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_3" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_4" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_5" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_6" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_7" : { "type" : "keyword", "index": "not_analyzed" },
+                "path_level_8" : { "type" : "keyword", "index": "not_analyzed" },
+                
+                "timestamp" : { "type" : "date", "index": "not_analyzed" },
+                "value" : { "type" : "long", "index": "not_analyzed" }
+            }
+        }
+    }
+}'
