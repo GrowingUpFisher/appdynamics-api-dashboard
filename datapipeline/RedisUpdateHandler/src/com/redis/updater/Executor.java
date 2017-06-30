@@ -1,10 +1,6 @@
 package com.redis.updater;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -24,27 +20,36 @@ import com.redis.secret.userCredentials;
 
 public class Executor {
 	
-	public static void main(String[] args) {
+	public static void main(int n, String[] args) {
 		try {
-			String key = "update-handler-list";
+			
+			//============ CONFIGURABLE ==============
+			String key = "update-handler-list-" + n;
+			String redisListKey = "apm-forecast";
+	        String durationInMins = "60";
+	        String rollup = "false";
+	        String output = "JSON";
+	        //============ CONFIGURABLE ==============
+	        
 			String[] redisKey;
 	        String applicationName;
 	        String metricPath;
 	        String uri;
 	        String timeRangeType;
-	        String durationInMins;
-	        String rollup;
-	        String output;
 	        String startTime;
 	        String url;
-	        String timestamp;
+	        Long timestamp;
 	        String json = "";
-	        metricData dataItem;
 	        String xformData;
 	        ObjectMapper mapper = new ObjectMapper();
-	        FileLock lock = null;
+	        
+	        //============ DEFAULTS ==============
 	        String redis_host = "localhost";
 	        String update_flag = "x";
+	        //============ DEFAULTS ==============
+	        
+	        metricContainer container;
+	        Long adjustedMaxUnixTimeStamp;
 	        
 	        //handle input arguments
 	        for(int i=0; i<args.length ; i++) {
@@ -57,13 +62,8 @@ public class Executor {
 	        	}
 	        }
 	        
-	        File file = new File("access.lck");
-	        RandomAccessFile raf = new RandomAccessFile(file, "rw");
-	        FileChannel channel = raf.getChannel();
-			
 	        try {
-	        	lock = channel.tryLock();
-	        
+	        	
 				JobFunctions job = new JobFunctions();
 				job.createJedisConn(redis_host);
 				
@@ -71,25 +71,26 @@ public class Executor {
 				
 				uhl_map = job.getMetricURIList(key, update_flag);
 				
-				//authentication header for      Preemptive Basic HTTPS Authentication
+				//authentication header for Preemptive Basic HTTPS Authentication
 				String auth = userCredentials.user + ":" + userCredentials.pass;
 		        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("ISO-8859-1")));
 		        String authHeader = "Basic " + new String(encodedAuth);
 		        HttpClient client = HttpClientBuilder.create().build();
 		        HttpResponse response = null;
 				
+		        System.out.println("Started processing "+key+".lst");
+		        
 				for(String path : uhl_map.keySet()) {
-					timestamp = uhl_map.get(path);
+					
+					timestamp = Long.parseLong(uhl_map.get(path));
 					redisKey = path.split("[$]");
 					applicationName = redisKey[0];
 			        metricPath = redisKey[1];
 			        uri = "https://hermes.saas.appdynamics.com/controller/rest/applications/" + applicationName + "/metric-data?";
-			        timeRangeType = timestamp.compareTo("0")==0?"BEFORE_NOW":"AFTER_TIME";
-			        durationInMins = "2880"; //past 2 days
-			        rollup = "false";
-			        output = "JSON";
-			        startTime = timestamp.compareTo("0")==0?"":"&start-time="+timestamp;
-			        dataItem = null;
+			        timeRangeType = timestamp==0?"BEFORE_NOW":"AFTER_TIME";
+			        startTime = timestamp==0?"":"&start-time="+timestamp;
+			        container = null;
+			        adjustedMaxUnixTimeStamp = Long.MAX_VALUE;
 			        
 			        url = uri + 
 			  			  "metric-path=" + metricPath.replace("%", "%25").replace("\"", "%22").replace(" ", "%20").replace("|", "%7C").replace("(", "%28").replace(")", "%29") +
@@ -106,31 +107,39 @@ public class Executor {
 			        
 			        json = EntityUtils.toString(response.getEntity());
 			        
-			        json = json.substring(1, json.length()-1);
 			        
 			        if(json.length() > 0) {
-			        	dataItem = mapper.readValue(json, metricData.class);
-			        
-				        for(int i = 1; i < dataItem.getMetricValues().size(); i++) {
-				        	dataItem.getMetricValues().get(i).setXform(metricPath, applicationName);
-				        	xformData = dataItem.getMetricValues().get(i).getXform().toString();
-				        	timestamp = dataItem.getMetricValues().get(i).getStartTimeInMillis();
+				        
+			        	json = "{ \"container\" : " + json + " }";
+				        
+				        container = mapper.readValue(json, metricContainer.class);
+				        
+				        for(int j=0; j<container.getContainer().size(); j++) {
+				        	metricPath = container.getContainer().get(j).getMetricPath();
 				        	
-				        	job.pushMetricVal("apm-original", xformData);
+				        	for(int i = 1; i < container.getContainer().get(j).getMetricValues().size(); i++) {
+				        		container.getContainer().get(j).getMetricValues().get(i).setXform(metricPath, applicationName);
+					        	xformData = container.getContainer().get(j).getMetricValues().get(i).getXform().toString();
+					        	timestamp = container.getContainer().get(j).getMetricValues().get(i).getStartTimeInMillis();
+					        	
+					        	job.pushMetricVal(redisListKey, xformData);
+					        	//System.out.println(key+".lst -> .");
+					        }
+				        	
+				        	if(timestamp < adjustedMaxUnixTimeStamp) {
+				        		adjustedMaxUnixTimeStamp = timestamp;
+				        	}
 				        }
-				        job.updateMetricURIList(key, path, timestamp);
+				        job.updateMetricURIList(key, path, adjustedMaxUnixTimeStamp.toString());
+				        //System.out.println(key+".lst -> +");
 			        }
 				}
 			} catch (OverlappingFileLockException e) {
 				e.printStackTrace();
 		    }
 	        
-	        if( lock != null ) {
-	            lock.release();
-	        }
+	        System.out.println("\nDone processing "+key+".lst");
 	        
-	        raf.close();
-	        channel.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {

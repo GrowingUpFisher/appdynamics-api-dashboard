@@ -61,7 +61,6 @@ public class JobFunctions {
 	}
 	
 	public void pushMetricVal(String key, String val) throws IOException {
-		long ret = jedis.lpush(key.toLowerCase(), val);
-		System.out.println(ret);
+		jedis.lpush(key.toLowerCase(), val);
 	}
 }

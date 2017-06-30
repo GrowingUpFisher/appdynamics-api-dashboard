@@ -5,7 +5,7 @@ public class metricValues {
     private int current;
     private int min;
     private int max;
-    private String startTimeInMillis;
+    private Long startTimeInMillis;
     private boolean useRange;
     private int count;
     private int sum;
@@ -36,11 +36,11 @@ public class metricValues {
 	}
 	public void setMax(int max) {
 		this.max = max;
-	}
-	public String getStartTimeInMillis() {
+	}	
+	public Long getStartTimeInMillis() {
 		return startTimeInMillis;
 	}
-	public void setStartTimeInMillis(String startTimeInMillis) {
+	public void setStartTimeInMillis(Long startTimeInMillis) {
 		this.startTimeInMillis = startTimeInMillis;
 	}
 	public boolean isUseRange() {
@@ -84,17 +84,18 @@ public class metricValues {
 		this.xform.setValue(value);
 		this.xform.setApplication(application);
 		
-		System.out.println(path);
+		//System.out.println(path);
 		
 		for(int i=0; i<path_levels.length; i++) {
 			switch(i) {
-			case 0: this.xform.setPath_level_1(path_levels[i]); break;
-			case 1: this.xform.setPath_level_2(path_levels[i]); break;
-			case 2: this.xform.setPath_level_3(path_levels[i]); break;
-			case 3: this.xform.setPath_level_4(path_levels[i]); break;
-			case 4: this.xform.setPath_level_5(path_levels[i]); break;
-			case 5: this.xform.setPath_level_6(path_levels[i]); break;
-			case 6: this.xform.setPath_level_7(path_levels[i]); break;
+			case 0: this.xform.setPl1(path_levels[i]); break;
+			case 1: this.xform.setPl2(path_levels[i]); break;
+			case 2: this.xform.setPl3(path_levels[i]); break;
+			case 3: this.xform.setPl4(path_levels[i]); break;
+			case 4: this.xform.setPl5(path_levels[i]); break;
+			case 5: this.xform.setPl6(path_levels[i]); break;
+			case 6: this.xform.setPl7(path_levels[i]); break;
+			case 7: this.xform.setPl8(path_levels[i]); break;
 			}
 		}
 	}

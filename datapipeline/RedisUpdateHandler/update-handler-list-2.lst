@@ -1,0 +1,76 @@
+##################################
+######## aaqp_prd_POD24 ##########
+##################################
+#Infrastructure
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|Individual Nodes|*|JVM|Process CPU Burnt (ms/min)
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|Individual Nodes|*|JVM|Threads|Current No. of Threads
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|Individual Nodes|*|JVM|Memory|Heap|Used %
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|Individual Nodes|*|JVM|Memory|Non-Heap|Used %
+
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JMX|Web Container Runtime|*|Busy Threads
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JMX|Web Container Runtime|*|Request Count
+
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JVM|Classes|Current Loaded Class Count
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JVM|Garbage Collection|GC Time Spent Per Min (ms)
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JVM|Garbage Collection|Memory Pools|CMS Old Gen|Current Usage (MB)
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JVM|Garbage Collection|Memory Pools|Metaspace|Current Usage (MB)
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JVM|Memory|Heap|Current Usage (MB)
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JVM|Memory|Non-Heap|Current Usage (MB)
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JVM|Threads|Current No. of Threads
+aaqp_prd_POD24$Application Infrastructure Performance|ECOM_aaqp_prd|JVM|Process CPU Usage %
+
+#Backends
+aaqp_prd_POD24$Backends|Discovered backend call - SVC_AAQP1-Oracle DB-CRS05-Oracle Database 11g Enterprise Edition Release 11.2.0.3.0 - 64bit Producti|Average Response Time (ms)
+aaqp_prd_POD24$Backends|Discovered backend call - SVC_AAQP2-Oracle DB-CRS05-Oracle Database 11g Enterprise Edition Release 11.2.0.3.0 - 64bit Producti|Average Response Time (ms)
+
+#Business Transaction
+aaqp_prd_POD24$Business Transaction Performance|Business Transactions|ECOM_aaqp_prd|*|Average Response Time (ms)
+aaqp_prd_POD24$Business Transaction Performance|Business Transactions|ECOM_aaqp_prd|*|Calls per Minute
+
+#Overall Application Performance
+aaqp_prd_POD24$Overall Application Performance|Average Response Time (ms)
+aaqp_prd_POD24$Overall Application Performance|Calls per Minute
+aaqp_prd_POD24$Overall Application Performance|Errors per Minute
+
+aaqp_prd_POD24$Overall Application Performance|ECOM_aaqp_prd|Individual Nodes|*|Average Response Time (ms)
+aaqp_prd_POD24$Overall Application Performance|ECOM_aaqp_prd|Individual Nodes|*|Errors per Minute
+aaqp_prd_POD24$Overall Application Performance|ECOM_aaqp_prd|Individual Nodes|*|Calls per Minute
+
+
+##################################
+######## aagl_prd_POD44 ##########
+##################################
+#Infrastructure
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|Individual Nodes|*|JVM|Process CPU Burnt (ms/min)
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|Individual Nodes|*|JVM|Threads|Current No. of Threads
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|Individual Nodes|*|JVM|Memory|Heap|Used %
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|Individual Nodes|*|JVM|Memory|Non-Heap|Used %
+
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JMX|Web Container Runtime|*|Busy Threads
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JMX|Web Container Runtime|*|Request Count
+
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JVM|Classes|Current Loaded Class Count
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JVM|Garbage Collection|GC Time Spent Per Min (ms)
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JVM|Garbage Collection|Memory Pools|CMS Old Gen|Current Usage (MB)
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JVM|Garbage Collection|Memory Pools|Metaspace|Current Usage (MB)
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JVM|Memory|Heap|Current Usage (MB)
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JVM|Memory|Non-Heap|Current Usage (MB)
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JVM|Threads|Current No. of Threads
+aagl_prd_POD44$Application Infrastructure Performance|ECOM_aagl_prd|JVM|Process CPU Usage %
+
+#Backends
+aagl_prd_POD44$Backends|Discovered backend call - SVC_AAGL1-Oracle DB-CRS03-Oracle Database 11g Enterprise Edition Release 11.2.0.3.0 - 64bit Producti|Average Response Time (ms)
+aagl_prd_POD44$Backends|Discovered backend call - SVC_AAGL2-Oracle DB-CRS03-Oracle Database 11g Enterprise Edition Release 11.2.0.3.0 - 64bit Producti|Average Response Time (ms)
+
+#Business Transaction
+aagl_prd_POD44$Business Transaction Performance|Business Transactions|ECOM_aagl_prd|*|Average Response Time (ms)
+aagl_prd_POD44$Business Transaction Performance|Business Transactions|ECOM_aagl_prd|*|Calls per Minute
+
+#Overall Application Performance
+aagl_prd_POD44$Overall Application Performance|Average Response Time (ms)
+aagl_prd_POD44$Overall Application Performance|Calls per Minute
+aagl_prd_POD44$Overall Application Performance|Errors per Minute
+
+aagl_prd_POD44$Overall Application Performance|ECOM_aagl_prd|Individual Nodes|*|Average Response Time (ms)
+aagl_prd_POD44$Overall Application Performance|ECOM_aagl_prd|Individual Nodes|*|Errors per Minute
+aagl_prd_POD44$Overall Application Performance|ECOM_aagl_prd|Individual Nodes|*|Calls per Minute
