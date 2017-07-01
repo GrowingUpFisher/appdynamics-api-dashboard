@@ -26,7 +26,7 @@ public class Executor {
 			//============ CONFIGURABLE ==============
 			String key = "update-handler-list-" + n;
 			String redisListKey = "apm-forecast";
-	        String durationInMins = "60";
+	        String durationInMins = "300";
 	        String rollup = "false";
 	        String output = "JSON";
 	        //============ CONFIGURABLE ==============
@@ -78,9 +78,7 @@ public class Executor {
 		        HttpClient client = HttpClientBuilder.create().build();
 		        HttpResponse response = null;
 				
-		        System.out.println("Started processing "+key+".lst");
-		        
-				for(String path : uhl_map.keySet()) {
+		        for(String path : uhl_map.keySet()) {
 					
 					timestamp = Long.parseLong(uhl_map.get(path));
 					redisKey = path.split("[$]");
@@ -108,6 +106,9 @@ public class Executor {
 			        json = EntityUtils.toString(response.getEntity());
 			        
 			        
+			        //reset time-stamp for current metricContainer object
+			        timestamp = Long.MAX_VALUE;			        
+			        
 			        if(json.length() > 0) {
 				        
 			        	json = "{ \"container\" : " + json + " }";
@@ -123,22 +124,21 @@ public class Executor {
 					        	timestamp = container.getContainer().get(j).getMetricValues().get(i).getStartTimeInMillis();
 					        	
 					        	job.pushMetricVal(redisListKey, xformData);
-					        	//System.out.println(key+".lst -> .");
 					        }
 				        	
 				        	if(timestamp < adjustedMaxUnixTimeStamp) {
 				        		adjustedMaxUnixTimeStamp = timestamp;
 				        	}
 				        }
-				        job.updateMetricURIList(key, path, adjustedMaxUnixTimeStamp.toString());
-				        //System.out.println(key+".lst -> +");
+				        
+				        if(adjustedMaxUnixTimeStamp < Long.MAX_VALUE) {
+				        	job.updateMetricURIList(key, path, adjustedMaxUnixTimeStamp.toString());
+				        }
 			        }
 				}
 			} catch (OverlappingFileLockException e) {
 				e.printStackTrace();
-		    }
-	        
-	        System.out.println("\nDone processing "+key+".lst");
+		    }	        
 	        
 		} catch (IOException e) {
 			e.printStackTrace();
