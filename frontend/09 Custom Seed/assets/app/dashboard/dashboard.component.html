@@ -1,0 +1,29 @@
+<div class="card text-center">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" (click)="onStandaloneClick()">Standalone</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="onTrendClick()">Trends</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="onCompareClick()">Compare</a>
+      </li>
+
+      <!--
+      <li class="nav-item">
+        <a class="nav-link" (click)="onMultSeriesClick()">MultiSeries</a>
+      </li> -->
+
+    </ul>
+  </div>
+  <router-outlet></router-outlet>
+</div>
+
+<!--
+
+<div class="pad-right">
+  <button class="btn btn-primary btn-md" (click)="onStandaloneClick()">Standalone</button>
+  <button class="btn btn-primary btn-md" (click)="onCompareClick()">Compare</button>
+</div> -->

@@ -1,0 +1,36 @@
+<br>
+<div>
+  <span class="pad-right">
+    <label>Pod:</label>
+
+    <select class="btn btn-default btn-lg dropdown-toggle" [(ngModel)]="selectedPod" (change)="onPodSelect($event.target.value)">
+  <option value="Select">--Select--</option>
+  <option  *ngFor="let pod of podArr" value= {{pod}}>{{pod}}</option>
+</select>
+  </span>
+
+    <span class="pad-right">
+    <label>Realm:</label>
+    <select class="btn btn-default btn-lg dropdown-toggle" [(ngModel)]="selectedRealm" (change)="onRealmSelect($event.target.value)">
+  <option *ngIf='selectedPod === "Select"' value="Select">--Select--</option>
+  <option *ngFor="let realm of realmArr" value= {{realm}}>{{realm}}</option>
+</select>
+  </span>
+
+    <span class="pad-right">
+    <label>Application:</label>
+    <select class="btn btn-default btn-lg dropdown-toggle" [(ngModel)]="selectedApp">
+  <option *ngIf='selectedRealm === "Select"' value="Select">--Select--</option>
+  <option *ngFor="let app of appArr" value= {{app}}>{{app}}</option>
+</select>
+  </span>
+
+    <span>
+
+    <button type="submit" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+
+  </span>
+
+</div>
+<hr>
+<router-outlet></router-outlet>

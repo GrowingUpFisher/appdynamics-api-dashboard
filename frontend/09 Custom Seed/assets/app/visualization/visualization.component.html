@@ -1,0 +1,45 @@
+
+<div class="card text-center">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+
+       <!--     <li class="nav-item">
+                <a class="nav-link" (click)="onHeatmap()">HeatMap</a>
+            </li> -->
+
+
+            <li class="nav-item">
+                <a class="nav-link active" (click)="onScatter()">Scatter Plot</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="onLine()">Line Graph</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" (click)="onBar()">Bar Graph</a>
+            </li>
+
+
+        </ul>
+    </div>
+
+</div>
+<div>
+<div *ngIf="scatterFlag">
+    <app-scatter-plot></app-scatter-plot>
+</div>
+
+<div *ngIf="lineFlag">
+<app-line-graph></app-line-graph>
+</div >
+
+<div *ngIf="barFlag">
+    <app-dashboard-bar-graph></app-dashboard-bar-graph>
+</div>
+
+    <!--
+    <div *ngIf = "heatMapFlag">
+        <app-heatmap></app-heatmap>
+    </div> -->
+
+</div>
