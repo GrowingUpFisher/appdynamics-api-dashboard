@@ -11,7 +11,3 @@ crontab configuration:
 - crontab -e
 - contents:
   * * * * * java -jar <path to jar>/redisUpdateHandler.jar <IP of Redis Host>
-
-locking for update-handler-list.lst:
-
-- The 
