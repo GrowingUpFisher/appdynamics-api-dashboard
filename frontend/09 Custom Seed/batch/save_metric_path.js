@@ -1,22 +1,20 @@
 
 const splitPattern = '%7C';
-const smd = require('./store_metric_data');
-var mCache = {};
-const async = require('async');
-exports.handleMetricPath = function(metricPath) {
+const smd = require('./store_metrics');
 
 
-    // async.eachSeries(metricPath, function(path) {
-    //     smd.storeAppMetricPath(mCache,path.split(splitPattern));
-    // });
+exports.handleMetricPath = function(pool, obj) {
 
 
-    for(var i=0; i<metricPath.length; i++) {
-        const brokenUrl = metricPath[i].split(splitPattern);
-        console.log()
-        smd.storeAppMetricPath(mCache, brokenUrl);
+  //  for(var i=0; i<metricPath.length; i++) {
+     //   const obj = metricPath[i];
+        const applicationName = obj.name;
+        const metricPaths = obj.metricPaths;
+        const brokenUrl = metricPaths.split(splitPattern);
+        //smd.saveData(mCache, brokenUrl, applicationName);
+        return smd.storeData(pool, applicationName, brokenUrl);
 
-    }
+ //   }
 
 
 }
