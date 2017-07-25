@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
     styleUrls: ['./dashboard.component.css'],
     providers: [DashboardService]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent  {
 
     private applicationArr: Application[] = [];
     private podRealmAppObj = {};
@@ -26,28 +26,104 @@ export class DashboardComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router) {
 
+        this.loadDashboardDetails();
 
-    }
-
-    ngOnInit() {
-        this.router.navigate(['/dashboard/standalone']);
-
+        //this.router.navigate(['/dashboard/standalone/config/' + this.selectedPod + "_" + this.selectedRealm + "_" + this.selectedApp]);
     }
 
 
+    loadDashboardDetails() {
+        this.dashboardService
+            .getDashboardMenuDetails()
+            .subscribe((response) => {
 
+                JSON.parse(response.json().body).map((item) => {
+                    const app = item;
+                    this.applicationArr.push(app);
+                });
+                this.preapareApplicationMenuItems();
+                console.log("this.podRealmAppObj: " + JSON.stringify(this.podRealmAppObj));
 
-    onStandaloneClick() {
-        this.router.navigate(['/dashboard/standalone']);
+                this.podArr = Object.getOwnPropertyNames(this.podRealmAppObj);
+            }, (error) => {
+                console.log("Error While retrieving Application Data : " + error);
+            });
     }
 
-    onCompareClick() {
+    preapareApplicationMenuItems() {
+        this.applicationArr.map((app) => {
+            const appDetailArr = app.name.split("_");
+            if (appDetailArr.length === 3) {
 
-        this.router.navigate(['/dashboard/compare']);
+                const appName = appDetailArr[0];
+                const realmName = appDetailArr[1];
+                const podName = appDetailArr[2];
+                if (this.podRealmAppObj.hasOwnProperty(podName)) {
+                    // existing pod
+                    const realmObjs = this.podRealmAppObj[podName];
+                    if (realmObjs.hasOwnProperty(realmName)) {
+                        // existing realm
+                        const appObjs = realmObjs[realmName];
+                        appObjs[appName] = app.id;
+                    } else {
+                        // new realm
+                        const appObjs = {};
+                        appObjs[appName] = app.id;
+                        realmObjs[realmName] = appObjs;
+
+                    }
+                } else {
+                    // new pod
+                    const appObjs = {};
+                    appObjs[appName] = app.id;
+                    const realmObjs = {};
+                    realmObjs[realmName] = appObjs;
+                    this.podRealmAppObj[podName] = realmObjs;
+                }
+
+            } else {
+                console.error("Error with app : " + app.name);
+            }
+
+        });
+        console.log("Final Object : " + JSON.stringify(this.podRealmAppObj));
     }
 
-    onTrendClick() {
-        this.router.navigate(['/dashboard/trends']);
+    onPodSelect(podName: string) {
+        if (podName === "Select") {
+            this.selectedRealm = "Select";
+            this.selectedApp = "Select";
+            this.realmArr = ['Select'];
+            this.appArr = ['Select'];
+        } else {
+            const relevantRealms = this.podRealmAppObj[podName];
+            this.realmArr = Object.getOwnPropertyNames(relevantRealms);
+            this.appArr = ['Select'];
+            this.selectedRealm = 'Select';
+            this.selectedApp = 'Select';
+
+        }
+
+    }
+
+    onRealmSelect(realmName: string) {
+        if (realmName === "Select") {
+            this.selectedApp = "Select";
+            this.selectedApp = 'Select';
+            this.appArr = ['Select'];
+        } else {
+            const relevantRealms = this.podRealmAppObj[this.selectedPod];
+            console.log("relevantRealms : " + JSON.stringify(relevantRealms));
+            const relevantApps = relevantRealms[realmName];
+            this.selectedApp = 'Select';
+            this.appArr = Object.getOwnPropertyNames(relevantApps);
+        }
+
+    }
+
+    onSubmit() {
+        console.log('selection is : ' +this.selectedPod + "_" + this.selectedRealm + "_" + this.selectedApp);
+        this.router.navigate([this.selectedPod + "_" + this.selectedRealm + "_" + this.selectedApp + '/viz'], {relativeTo : this.route});
     }
 
 

@@ -1,7 +1,7 @@
 <!--Pull metric and display  -->
 <div class="container-fluid">
     <div class="row">
-        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+    <!--   <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
                     <a class="nav-link" (click)="onMetricClick()">Avg Response Time</a>
@@ -20,14 +20,32 @@
                 </li>
             </ul>
         </nav>
-        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+       <tree-root [nodes]="nodes"></tree-root>
+                </li>
+            </ul>
+        </nav>  -->
+
+
+        <!-- <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
 
             <div>
-              <!--   <router-outlet></router-outlet> -->
 
-                <app-rt-line-chart [art]="art"></app-rt-line-chart>
+
+                <app-rt-line-chart [art]="art" [metricName]=""></app-rt-line-chart>
+            </div> -->
+
+          <div *ngFor="let obj of groupedArt; let i=index">
+
+
+             <app-rt-line-chart [art]="obj.art" [metricName]="obj.metricName" [i]="i"></app-rt-line-chart>
             </div>
-        </main>
+
+
+        <!-- </main> -->
     </div>
 
 </div>

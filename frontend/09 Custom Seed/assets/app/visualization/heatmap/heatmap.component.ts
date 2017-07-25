@@ -11,7 +11,7 @@ import * as d3Colors from 'd3-interpolate';
 
 import {Day, Hour} from '../../model/testData';
 import {color} from "d3-color";
-import * as Artyom from 'artyom.js';
+
 
 @Component({
     selector: 'app-heatmap',
@@ -34,7 +34,7 @@ export class HeatMapComponent implements OnInit {
     private colors = [100,200,300,400,500,600,700,800,900];
     private days = ["June 20", "June 21", "June 22", "June 23"];
     private times = ['0', "1","2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
-    private artyom = Artyom.ArtyomBuilder.getInstance();
+    //private artyom = Artyom.ArtyomBuilder.getInstance();
 
 
     ngOnInit() {
@@ -49,53 +49,37 @@ export class HeatMapComponent implements OnInit {
 
     startArtyom() {
 
-
-        this.artyom.initialize({
-            lang : 'en-GB',
-            continuous : true,
-            debug : true,
-            listen  : true
-        });
-
-        this.artyom.addCommands({
-            description: 'Test hello talk',
-
-            indexes: ['what is the minimum average response time', 'commerce cloud'],
-            action: (i) => {
-                if(i ===0) {
-                    this.artyom.say("The minimum average response time was 130 milliseconds on June 22nd at one pm");
-                    console.log('Hello recognized');
-                } else {
-                    this.artyom.say("Its Anthony , oops sorry I meant Diana");
-                    console.log('Hey recognized');
-                }
-
-            }
-        });
-
+        //
+        // this.artyom.initialize({
+        //     lang : 'en-GB',
+        //     continuous : true,
+        //     debug : true,
+        //     listen  : true
+        // });
+        //
         // this.artyom.addCommands({
-        //     description: 'Test command 2',
-        //     smart: true,
-        //     indexes: ['*'],
-        //     action: (i, wildcard) => {
-        //         this.artyom.say("Hello" + wildcard);
+        //     description: 'Test hello talk',
+        //
+        //     indexes: ['what is the minimum average response time', 'commerce cloud'],
+        //     action: (i) => {
+        //         if(i ===0) {
+        //             this.artyom.say("The minimum average response time was 130 milliseconds on June 22nd at one pm");
+        //             console.log('Hello recognized');
+        //         } else {
+        //             this.artyom.say("Its Anthony , oops sorry I meant Diana");
+        //             console.log('Hey recognized');
+        //         }
+        //
         //     }
         // });
 
-        // this.artyom.redirectRecognizedTextOutput((recognized,isFinal) => {
-        //     if(isFinal){
-        //         // Nothing
-        //         //$("#span-preview").text("");
-        //     }else{
-        //         //$("#span-preview").text(recognized);
-        //     }
-        // });
+
 
 
     }
 
     stopArtyom() {
-        this.artyom.fatality();
+      //  this.artyom.fatality();
     }
 
 

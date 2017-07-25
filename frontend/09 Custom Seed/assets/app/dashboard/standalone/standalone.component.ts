@@ -27,9 +27,9 @@ export class StandaloneComponent {
                 private route: ActivatedRoute,
                 private router: Router) {
 
-       // this.loadDashboardDetails();
+       this.loadDashboardDetails();
 
-        this.router.navigate(['/dashboard/standalone/config/' + this.selectedPod + "_" + this.selectedRealm + "_" + this.selectedApp]);
+        //this.router.navigate(['/dashboard/standalone/config/' + this.selectedPod + "_" + this.selectedRealm + "_" + this.selectedApp]);
     }
 
 
@@ -94,12 +94,15 @@ export class StandaloneComponent {
         if (podName === "Select") {
             this.selectedRealm = "Select";
             this.selectedApp = "Select";
-            this.realmArr = [];
-            this.appArr = [];
+            this.realmArr = ['Select'];
+            this.appArr = ['Select'];
         } else {
             const relevantRealms = this.podRealmAppObj[podName];
             this.realmArr = Object.getOwnPropertyNames(relevantRealms);
-            this.appArr = [];
+            this.appArr = ['Select'];
+            this.selectedRealm = 'Select';
+            this.selectedApp = 'Select';
+
         }
 
     }
@@ -107,17 +110,20 @@ export class StandaloneComponent {
     onRealmSelect(realmName: string) {
         if (realmName === "Select") {
             this.selectedApp = "Select";
-            this.appArr = [];
+            this.selectedApp = 'Select';
+            this.appArr = ['Select'];
         } else {
             const relevantRealms = this.podRealmAppObj[this.selectedPod];
             console.log("relevantRealms : " + JSON.stringify(relevantRealms));
             const relevantApps = relevantRealms[realmName];
+            this.selectedApp = 'Select';
             this.appArr = Object.getOwnPropertyNames(relevantApps);
         }
 
     }
 
     onSubmit() {
+        console.log('selection is : ' +this.selectedPod + "_" + this.selectedRealm + "_" + this.selectedApp);
         this.router.navigate(['/dashboard/standalone/config/' + this.selectedPod + "_" + this.selectedRealm + "_" + this.selectedApp]);
     }
 }

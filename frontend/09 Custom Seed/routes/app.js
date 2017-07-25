@@ -7,6 +7,20 @@ const express = require('express');
 const request = require('request');
 const router = express.Router();
 
+
+
+const mysql = require('mysql');
+const sqlProp = {
+    connectionLimit : 100,
+    host : 'localhost',
+    'user' : 'root',
+    'password' : '',
+    database : 'app_dynamics_metrics'
+};
+
+const pool = mysql.createPool(sqlProp);
+const sqlFacade = require('../bin/mysql-facade');
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
@@ -55,22 +69,31 @@ router.get('/applications', function (req, res, next) {
 
 // ** FOR RETRIEVING APPLICATION METRICS RECURSIVELY
 
-router.get('/applications/metrics/:appId', function (req, res, next) {
-  const usernamePassword = getUsernamePassword(req);
-  const appId = req.params.appId;
-  const baseMetricUrl = 'https://hermes.saas.appdynamics.com/controller/rest/applications/' + appId + '/metrics?output=JSON';
-  const options = getOptionalParameters(usernamePassword, 'GET', baseMetricUrl);
+// router.get('/applications/metrics/:appId', function (req, res, next) {
+//   const usernamePassword = getUsernamePassword(req);
+//   const appId = req.params.appId;
+//   const baseMetricUrl = 'https://hermes.saas.appdynamics.com/controller/rest/applications/' + appId + '/metrics?output=JSON';
+//   const options = getOptionalParameters(usernamePassword, 'GET', baseMetricUrl);
+//
+//   request.get(options, function (err, backendResponse, body) {
+//     console.log("error : " + err);
+//     console.log("res : " + res);
+//     console.log("body : " + body);
+//     if (err != null) {
+//       return res.send({ "Status": "Error Retrieving Applications" });
+//     }
+//     return res.send((JSON.parse(body)));
+//
+//   });
+//
+// });
 
-  request.get(options, function (err, backendResponse, body) {
-    console.log("error : " + err);
-    console.log("res : " + res);
-    console.log("body : " + body);
-    if (err != null) {
-      return res.send({ "Status": "Error Retrieving Applications" });
-    }
-    return res.send((JSON.parse(body)));
 
-  });
+router.get('/applications/metrics/:appId', function(req, res, next) {
+    const applicationName = req.params.appId;
+    const sqlQuery = 'Select * from appd_metrics where application_name=\''+applicationName + "\'";
+    return sqlFacade.getAppMetrics(pool, sqlQuery, res);
+
 
 });
 

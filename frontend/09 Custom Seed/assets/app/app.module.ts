@@ -20,15 +20,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MultiSeriesLineComponent} from './visualization/multiseries-line-graph/multiseries-line-graph.component';
 import {MultipleLineSeriesComponent} from './visualization/multiple-time-series-graph/multiple-time-series-graph';
 import {RTLineChart} from './visualization/rt-line-chart/rt-line-chart.component';
+import {TreeModule} from 'angular-tree-component';
+import {CreateComponent} from "./create/create.component";
+import {VizDashboard} from "./viz-dashboard/viz-dashboard.component";
+
+
 
 @NgModule({
     declarations: [AppComponent, LoginComponent, DashboardComponent,
         VisualizationComponent, ScatterPlotComponent, LineGraphComponent, StandaloneComponent, CompareComponent,
         StandaloneMetricViewComponent, BarGraphComponent, HeatMapComponent,
-        TrendsComponent, MultiSeriesLineComponent, MultipleLineSeriesComponent, RTLineChart],
+        TrendsComponent, MultiSeriesLineComponent, MultipleLineSeriesComponent, RTLineChart, HeatMapComponent,
+        CreateComponent, VizDashboard],
 
     imports: [BrowserModule, ReactiveFormsModule, FormsModule,
-        HttpModule, APP_ROUTING, BrowserAnimationsModule],
+        HttpModule, APP_ROUTING, BrowserAnimationsModule, TreeModule],
     bootstrap: [AppComponent],
     providers: [CachedDataService]
 })

@@ -16,6 +16,10 @@ export class RTLineChart implements OnInit, OnChanges {
 
     @Input()
     art : AverageResponseTime;
+    @Input()
+    metricName : string;
+    @Input()
+        i;
     currentStart;
     currentEnd;
 
@@ -53,16 +57,22 @@ export class RTLineChart implements OnInit, OnChanges {
         var height : number = 500 - margin.top - margin.bottom;
         var height2 = 500 - margin2.top - margin2.bottom;
 
+        d3.select("div.multi-class-"+this.i).remove();
+        // d3.select("svg.multi-class").remove();
+        var divElement = d3.select("div#rt-multiseries").append("div").attr("class", "multi-class-"+this.i);
+        divElement.append("h3").text(this.metricName);
 
-        d3.select("svg.multi-class").remove();
-
-        svg = d3.select("div#rt-multiseries").append("svg").attr("class", "multi-class")
+        svg = divElement.append("svg").attr("class", "multi-class")
             .attr("width", width + 200)
             .attr("height", height + 200);
 
+        // svg = d3.select("div#rt-multiseries").append("svg").attr("class", "multi-class")
+        //     .attr("width", width + 200)
+        //     .attr("height", height + 200);
+
         chartGroup = svg.append("g")
             .attr("class", "chartGroup")
-        //.attr("transform", "translate("+margin.left + "," + margin.top + ")");
+
 
         var y = d3.scaleLinear()
             .domain([d3.min(this.art.data, (d) => d.value), d3.max(this.art.data, (d) => d.value)])

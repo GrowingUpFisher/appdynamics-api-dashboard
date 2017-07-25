@@ -3,18 +3,25 @@
  */
 const dataLocation  = "/Users/dkandpal/Code/Repo/backup23/09\ Custom\ Seed/bin/data.csv";
 const elasticsearch = require('elasticsearch');
+const activeChannels = [];
 var esClient = new elasticsearch.Client({
     host: 'localhost:9200',
     log: 'trace'
 });
+var socketConnection;
 
+setInterval(function() {
+    sendMessageToChannels();
+}, 10000);
 
     var countr = 0;
     var startDate = 1499699490526;
     var incrBy = 60000;
     var counter = 10;
 
-function searchData(socket) {
+exports.searchData = function(socket) {
+
+
     console.log('Searching data');
     const application = 'aaqx_prd_POD24';//params.application;
     const pl1 = "Overall Application Performance";
@@ -25,12 +32,14 @@ function searchData(socket) {
 
     esClient.search({
         index: 'apm-original',
-        q : 'application:' + application,
+       // q : 'application:' + application,
         body : {
             "query": {
                 "bool": {
                     "must": [
-                        { "match": { "application": application} }
+                        { "match": { "application": application} },
+                        { "match": { "pl1": pl1} },
+                        { "match": { "pl2": pl2} }
                     ],
                     "filter": [
                         { "range": { "timestamp": {"lte" : startDate}}}
@@ -49,6 +58,7 @@ function searchData(socket) {
             const totalHits = response.hits.hits.map(function(el) { return el._source});
 
             socket.emit('average response time reply', totalHits);
+
             setInterval(function() {
                 timer(socket);
             }, 10000);
@@ -56,6 +66,106 @@ function searchData(socket) {
     });
 
 }
+
+
+
+
+exports.retrieveMetricData = function(socket, requestData) {
+    if(typeof  socketConnection === 'undefined') {
+        console.log('Defining Socket Now!');
+        socketConnection = socket;
+    } else {
+        console.log('Socket already defined!');
+    }
+
+    const searchQuery = requestData.searchQuery;
+    const filterQuery = requestData.filterQuery;
+    const channelName = requestData.channelName;
+    const startDate = requestData.startDate;
+
+    esClient.search({
+        index: 'apm-original',
+        body : {
+            "query": {
+                "bool": {
+                    "must": searchQuery,
+                    "filter": filterQuery
+                }
+            },
+            "sort" : [{"timestamp" : "asc"}],
+            "size" : "8"
+        },
+        _source : ["timestamp", "value"]
+    }, function(error, response) {
+        if(error) {
+            console.error("Error occured while retrieving result : " + error);
+        }
+        if(response) {
+            const totalHits = response.hits.hits.map(function(el) { return el._source});
+            saveChannel(channelName, searchQuery, startDate);
+            const responseObj = {
+                channelName : channelName,
+                data : totalHits
+            }
+            socket.emit('data', responseObj);
+
+        }
+    });
+
+}
+
+function queryElasticSearch(searchQuery, filterQuery) {
+    return esClient.search({
+        index: 'apm-original',
+        body : {
+            "query": {
+                "bool": {
+                    "must": searchQuery,
+                    "filter": filterQuery
+                }
+            },
+            "sort" : [{"timestamp" : "asc"}],
+            "size" : "8"
+        },
+        _source : ["timestamp", "value"]
+    });
+}
+
+// channel name is whole path
+function sendMessageToChannels() {
+    for(var i=0; i< activeChannels.length; i++) {
+        const currentChannelObj = activeChannels[i];
+        queryElasticSearch(currentChannelObj.searchQuery, currentChannelObj.filterQuery).then(function(response) {
+            const totalHits = response.hits.hits.map(function(el) { return el._source});
+            const responseObj = {
+                channelName : currentChannelObj.channelName,
+                data : totalHits
+            }
+            socketConnection.emit('data', responseObj);
+        }, function(err) {
+            console.error("!!! Error Retrieving consecutive socket data form ES : " + err);
+        });
+
+    }
+}
+
+
+
+
+
+
+function saveChannel(channelName, searchQuery, startDate) {
+    const newChannelObj = {
+        channelName : channelName,
+        searchQuery : searchQuery,
+        filterQuery : [
+            { "range": { "timestamp": {"gt" : startDate}}}
+        ]
+    }
+    activeChannels.push(newChannelObj);
+}
+
+
 var counterNew = 1;
 function timer(socket) {
     var out = [];
@@ -114,4 +224,4 @@ function storeData(data) {
         });
 
 }
-module.exports = searchData;
+//module.exports = searchData;
