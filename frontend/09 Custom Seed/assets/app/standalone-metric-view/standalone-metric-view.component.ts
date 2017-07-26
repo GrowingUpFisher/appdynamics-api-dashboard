@@ -1,7 +1,7 @@
 /**
  * Created by dkandpal on 6/24/17.
  */
-import { Component, OnInit } from '@angular/core';
+import {Component, OnChanges, OnInit} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {DashboardService} from '../services/dashboard.service';
 import {AverageResponseTime, OverallAverageResponseTime} from '../model/overall-average-response-time';
@@ -27,12 +27,14 @@ export class StandaloneMetricViewComponent implements OnInit {
 
     private data : OverallAverageResponseTime[] = [];
     private art : AverageResponseTime = new AverageResponseTime() ;
-    private groupedArt = [];
+    public groupedArt = [];
 
 
     ngOnInit() {
       //  console.log('this.route.params : ' + this.route.params);
         //this.getAverageResponseTime();
+        console.log("CALLING NG ON INIT");
+      //  this.groupedArt = this.cachedDataService.groupedArt;
         this.initSocket();
 
 
@@ -40,11 +42,14 @@ export class StandaloneMetricViewComponent implements OnInit {
 
 
 
+
+
+
     getAverageResponseTime() {
 
         this.dashboardService.getAverageResponseTime().subscribe(s => {
             this.art = new AverageResponseTime();
-            console.log("socket response : " + JSON.stringify(s));
+            //console.log("socket response : " + JSON.stringify(s));
             for(let el in s) {
                 let e = new OverallAverageResponseTime();
                 e.timestamp = new Date(s[el].timestamp);
@@ -59,16 +64,18 @@ export class StandaloneMetricViewComponent implements OnInit {
         this.dashboardService.initSocket({
             application : 'aaqx_prd_POD24',
             path : ["Overall Application Performance", "Average Response Time"],
-            channelName : "Overall Application Performance|$|Average Response Time"
+            channelName : "Average Response Time  |  Overall Application Performance"
         });
+
+
         this.dashboardService.observable.subscribe(s => {
-            console.log("socket response : " + JSON.stringify(s));
+          //  console.log("socket response : " + JSON.stringify(s));
             const receivedChannelName = s.channelName;
             const receivedData = s.data;
             var previousArt = null;
             var previousStoredData = [];
             var index = null;
-            console.log("this.groupedArt : " + this.groupedArt);
+
             for(var i=0; i<this.groupedArt.length; i++) {
                     if(this.groupedArt[i].metricName === receivedChannelName) {
                         previousArt = this.groupedArt[i].art;
@@ -94,22 +101,18 @@ export class StandaloneMetricViewComponent implements OnInit {
             }
 
             if(index !== null) {
-                console.log("NOT Pushing in for the first time");
+              //  console.log("NOT Pushing in for the first time");
                 this.groupedArt.splice(index, 1, ft);
 
             } else {
-                console.log("Pushing in for the first time");
+             //   console.log("Pushing in for the first time");
 
                 this.groupedArt.push(ft);
             }
 
 
         });
-        this.cachedDataService.socket.emit('metrics', {
-            application : 'aaqx_prd_POD24',
-            path : ["Overall Application Performance", "Average Response Time"],
-            channelName : "Channel 2"
-        });
+
     }
 
 

@@ -18,6 +18,8 @@ export class CachedDataService {
     public socket;
     public socketData : SocketData = new SocketData();
 
+   // public groupedArt = [];
+
 
 
 }

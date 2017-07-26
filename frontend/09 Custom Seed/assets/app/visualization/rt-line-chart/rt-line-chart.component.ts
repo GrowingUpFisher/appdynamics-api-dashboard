@@ -95,16 +95,16 @@ export class RTLineChart implements OnInit, OnChanges {
         // new add on end
 
         if(!this.currentStart) {
-            console.log("CURRENT START NOT DEFINED : " + this.art.data.length);
+        //    console.log("CURRENT START NOT DEFINED : " + this.art.data.length);
             this.currentStart = minTs;
         } else {
-            console.log("CURRENT START DEFINED : " + this.currentStart);
+           // console.log("CURRENT START DEFINED : " + this.currentStart);
         }
         if(!this.currentEnd) {
-            console.log("CURRENT END NOT DEFINED : " + maxTs);
+         //   console.log("CURRENT END NOT DEFINED : " + maxTs);
             this.currentEnd = maxTs;
         } else {
-            console.log("CURRENT END DEFINED : " + this.currentEnd);
+         //   console.log("CURRENT END DEFINED : " + this.currentEnd);
         }
 
         var xAxis = d3.axisBottom(x);

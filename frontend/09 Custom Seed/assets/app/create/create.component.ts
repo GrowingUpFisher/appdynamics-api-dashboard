@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import {DashboardService} from "../services/dashboard.service";
 import {} from ''
+import {CachedDataService} from "../services/cached-data.service";
 @Component({
     selector: 'app-create-dashboard',
     templateUrl: './create.component.html',
@@ -19,7 +20,10 @@ export class CreateComponent {
     private selectedPath = '';
     @ViewChild('tree') tree: any;
 
-    constructor(private fb: FormBuilder, private dashboardService : DashboardService) {
+    constructor(private fb: FormBuilder, private dashboardService : DashboardService,
+                private cachedDataService : CachedDataService,
+                private route: ActivatedRoute,
+                private router: Router) {
         this.createForm();
         this.getAllApplicableMetrics();
     }
@@ -39,12 +43,11 @@ export class CreateComponent {
 
 
     onEvent = ($event) => {
-        console.log('1 :' + $event);
-        console.log('2:' + $event.node);
+
         const clickedNode = $event.node;
         if(clickedNode.isLeaf) {
             this.buildPath(clickedNode.data.name, clickedNode.parent);
-            console.log('Selected Path : ' + this.selectedPath);
+        
         } else {
             this.selectedPath = '';
         }
@@ -55,17 +58,32 @@ export class CreateComponent {
     buildPath(currentPath, node) {
         console.log('node.isRoot : ' + node.isRoot);
             if(typeof node.isRoot !== 'undefined') {
-                console.log('Sending full path : ' + currentPath + "|$|" + node.data.name);
-                this.selectedPath = currentPath + "|$|" + node.data.name;
-                return currentPath + "|$|" + node.data.name;
+
+                this.selectedPath = currentPath + "  |  " + node.data.name;
+
+                return currentPath + "  |  " + node.data.name;
             } else {
-                console.log('sending partial path since root not reached : ' + currentPath + "|$|" + node.data.name);
-                this.buildPath(currentPath + "|$|" + node.data.name, node.parent);
+
+                this.buildPath(currentPath + "  |  " + node.data.name, node.parent);
             }
     }
 
     filterNodes(filt, t2) {
         this.tree.treeModel.filterNodes(filt, true);
     }
+
+    addViz() {
+        this.cachedDataService.socket.emit('metrics', {
+            application : 'aaqx_prd_POD24',
+            path : ["Overall Application Performance", "Average Response Time"],
+            channelName : this.selectedPath
+        });
+
+        this.router.navigate(['../view'], {relativeTo : this.route});
+
+    }
+
+
+
 
 }

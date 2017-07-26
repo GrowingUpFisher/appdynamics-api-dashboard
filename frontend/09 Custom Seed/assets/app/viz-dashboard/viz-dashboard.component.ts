@@ -34,6 +34,7 @@ export class VizDashboard implements  OnInit {
     onCreate() {
         // const newUrl = this.router.url.replace('/view', '/create');
         // this.router.navigate([newUrl]);
+
         this.router.navigate(['create'], {relativeTo : this.route});
     }
 
