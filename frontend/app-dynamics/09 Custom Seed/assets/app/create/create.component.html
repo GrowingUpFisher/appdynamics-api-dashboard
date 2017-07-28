@@ -1,0 +1,139 @@
+<br>
+<hr>
+<br><br>
+<div class="container">
+
+<form [formGroup]="createMetricForm" novalidate>
+
+
+
+    <div class="form-group">
+        <label class="center-block"><h4>Select Graph Type:</h4>
+            <br>
+          <!--  <select class="form-control" formControlName="metricType">
+                <option *ngFor="let gt of graphTypes" [value]="gt">{{gt}}</option>
+            </select> -->
+            <div class="row">
+                <div class="col-md-2" *ngFor="let entry of graphTypes; let idx = index">
+                    <input type="radio" name="certificategroup"
+                           (change)="onSelectionChange(entry)"
+                           [checked]="(idx === 0)"
+                           [value]="entry">   {{entry}}
+                </div>
+
+            </div>
+        </label>
+    </div>
+
+</form>
+
+    <div class="row" *ngIf="lineGraph">
+        <br>
+
+        <hr>
+
+        <br>
+
+        <label  class="center-block"><h4>Select Line-Graph Type:</h4><br>
+            <div class="row">
+                <div class="col-md-2" *ngFor="let entry of lineTypes; let idx = index">
+                    <input type="radio" name="linegroup"
+                           (change)="onLine(entry)"
+                           [checked]="(idx === 0)"
+                           [value]="entry">   {{entry}}
+                </div>
+            </div>
+        </label>
+
+
+    </div>
+
+
+    <div class="row" *ngIf="heatMap">
+        <br>
+
+        <hr>
+
+        <br>
+
+        <label  class="center-block"><h4>Input Threshold Values :</h4><br>
+            <div class="row">
+
+               <small>Red : </small> <input placeholder="500 and above" />
+                <small>Orange : </small> <input placeholder="400 and above" />
+                <small>Yellow : </small> <input placeholder="300 and above" />
+                <small>Green : </small> <input placeholder="200 and above" />
+
+            </div>
+            <br>
+            <div class="row">
+
+                <small>Start Date : </small>  <input placeholder="June 20, 2017" />
+
+
+
+            </div>
+            <br>
+            <div class="row">
+
+                <small>End Date : </small> <input placeholder="June 23, 2017" />
+
+
+
+            </div>
+        </label>
+
+    </div>
+<br>
+
+<hr>
+
+<br>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Select Metric:</h4> <br>
+       <div class="row">
+           <div class="col-md-offset-1 col-md-11">
+          <input #filter (keyup)="filterNodes(filter.value, tree)" placeholder="filter metrics" />
+           </div>
+       </div>
+        <br>
+        <div class="row">
+            <div class="col-md-offset-1 col-md-11">
+            <tree-root #tree [nodes]="nodes" (activate)="onEvent($event)"></tree-root>
+            </div>
+       <!-- <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <tree-root #tree [nodes]="nodes" (activate)="onEvent2($event)"></tree-root>
+                </li>
+            </ul>
+        </nav> -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <h4>Selected Metric : </h4> <br> {{selectedPath}}
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-success" (click)="addViz()">Submit</button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
