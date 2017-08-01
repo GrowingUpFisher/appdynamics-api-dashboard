@@ -24,7 +24,8 @@ import {TreeModule} from 'angular-tree-component';
 import {CreateComponent} from "./create/create.component";
 import {VizDashboard} from "./viz-dashboard/viz-dashboard.component";
 import {DashboardService} from "./services/dashboard.service";
-import {ObjNgFor} from "./services/ObjNgFor";
+import {ObjectTypeTransformer} from "./services/object-type-transform.pipe";
+import {NglModule} from 'ng-lightning/ng-lightning'
 
 
 
@@ -34,7 +35,7 @@ import {ObjNgFor} from "./services/ObjNgFor";
          ScatterPlotComponent, LineGraphComponent, StandaloneComponent, CompareComponent,
         StandaloneMetricViewComponent, BarGraphComponent, HeatMapComponent,
         TrendsComponent, MultiSeriesLineComponent, MultipleLineSeriesComponent, RTLineChart, HeatMapComponent,
-        CreateComponent, VizDashboard, ObjNgFor],
+        CreateComponent, VizDashboard, ObjectTypeTransformer],
 
     imports: [BrowserModule, ReactiveFormsModule, FormsModule,
         HttpModule, APP_ROUTING, BrowserAnimationsModule, TreeModule],

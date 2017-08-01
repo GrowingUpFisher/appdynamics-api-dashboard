@@ -22,6 +22,9 @@ export class CreateComponent {
     private selectedEntry;
     private lineGraph = false;
     private heatMap = false;
+    startDate;
+    endDate;
+
     @ViewChild('tree') tree: any;
 
     constructor(private fb: FormBuilder, private dashboardService : DashboardService,
@@ -77,14 +80,31 @@ export class CreateComponent {
         this.tree.treeModel.filterNodes(filt, true);
     }
 
+    toDate(dateStr) {
+    const [year, month, day] = dateStr.split("-");
+        return new Date(year, month - 1, day).getTime();
+    }
+
     addViz() {
-        this.cachedDataService.socket.emit('metrics', {
-            application : 'aaqx_prd_POD24',
-            path : ["Overall Application Performance", "Average Response Time"],
-            channelName : this.selectedPath
-        });
-        this.cachedDataService.channels[this.selectedPath] = 'single-line-graph';
-        this.router.navigate(['../view'], {relativeTo : this.route});
+       if(this.heatMap) {
+
+            this.cachedDataService.heatMapData.push({
+                application : 'aaqx_prd_POD24',
+                path : ["Overall Application Performance", "Average Response Time"],
+                startDate : this.toDate(this.endDate),
+                endDate : this.toDate(this.startDate)
+            });
+           this.router.navigate(['../trends'], {relativeTo : this.route});
+       } else if(this.lineGraph) {
+           this.cachedDataService.socket.emit('metrics', {
+               application : 'aaqx_prd_POD24',
+               path : ["Overall Application Performance", "Average Response Time"],
+               channelName : this.selectedPath
+           });
+           this.cachedDataService.channels[this.selectedPath] = 'single-line-graph';
+           this.router.navigate(['../view'], {relativeTo : this.route});
+       }
+
 
     }
 

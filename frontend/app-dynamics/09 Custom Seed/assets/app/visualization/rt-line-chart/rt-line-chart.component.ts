@@ -182,6 +182,7 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
             .translateExtent([[0, 0], [width, height]])
             .extent([[0, 0], [width, height]])
             .on("zoom", zoomed);
+
         var line2 = d3.line().curve(d3.curveBasis).x(d => x2(d[0])).y(d => y2(d[1]));
 
         chartGroup.append("defs").append("clipPath")
@@ -189,6 +190,33 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
             .append("rect")
             .attr("width", width)
             .attr("height", height);
+
+        chartGroup.selectAll("line.horizontalGrid").data(y.ticks()).enter()
+            .append("line")
+            .attr("class", "horizontalGrid")
+            .attr("x1", 40)
+            .attr("x2", width + 40)
+            .attr("y1", function(d){ return y(d) + 21;})
+            .attr("y2", function(d){ return y(d) + 21;})
+            .attr("shape-rendering", "crispEdges")
+            .attr("stroke", "black")
+            .attr("stroke-width", "1px")
+            .attr("opacity", "0.1");
+
+
+        chartGroup.selectAll("line.verticalGrid").data(x.ticks()).enter()
+            .append("line")
+            .attr("class", "verticalGrid")
+            .attr("x1", function(d) {return x(d) + 40})
+            .attr("x2", function(d) {return x(d) + 40})
+            .attr("y1", 20)
+            .attr("y2", height + 20)
+            .attr("shape-rendering", "crispEdges")
+            .attr("stroke", "black")
+            .attr("stroke-width", "1px")
+            .attr("opacity", "0.1");
+
+
 
         var focus = chartGroup.append("g")
             .attr("class", "focus")
@@ -286,6 +314,26 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
 
             con.currentStart = x2.invert(s[0]);
             con.currentEnd = x2.invert(s[1]);
+
+
+
+            chartGroup.selectAll("line.verticalGrid").remove();
+
+            chartGroup.selectAll("line.verticalGrid").data(x.ticks()).enter()
+                .append("line")
+                .attr("class", "verticalGrid")
+                .attr("x1", function(d) {return x(d) + 40})
+                .attr("x2", function(d) {return x(d) + 40})
+                .attr("y1", 20)
+                .attr("y2", height + 20)
+                .attr("shape-rendering", "crispEdges")
+                .attr("stroke", "black")
+                .attr("stroke-width", "1px")
+                .attr("opacity", "0.1");
+
+
+
+
         }
 
         function zoomed() {

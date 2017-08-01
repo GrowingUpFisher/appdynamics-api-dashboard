@@ -22,15 +22,16 @@ export class CachedDataService {
     }
 
     public socket;
-    public socketData : SocketData = new SocketData();
+
 
    //public groupedArt : Observable<Array<any>> = Observable.create(() => []);
-    public groupedArt = []
-    public subjectGa = new Subject();
+
     public masterData = {}
     public channels = {};
     // store channel and graph state over here
     public sliderPosition = {}
+
+    public heatMapData = [];
 
 
 }

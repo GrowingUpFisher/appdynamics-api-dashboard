@@ -3,13 +3,13 @@
     <div class="row">
 
 
-          <div *ngFor="let obj of channels | ObjNgFor; let i=index">
+          <div *ngFor="let obj of channels | ObjectTypeTransformer; let i=index">
 
-            <!-- <app-rt-line-chart [art]="obj.value" [metricName]="obj.key" [i]="i"></app-rt-line-chart> -->
               <div *ngIf="checkLineGraph(obj.value)">
-                  obj key : {{obj.key}}
+
               <app-rt-line-chart [channelName]="obj.key" [i]="i"></app-rt-line-chart>
               </div>
+
           </div>
 
     </div>

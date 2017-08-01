@@ -1,3 +1,23 @@
-<app-heatmap></app-heatmap>
 
+
+<!--Pull metric and display
 <app-multiple-line-series height="100%" width="100%"></app-multiple-line-series>
+
+ -->
+
+<div class="container">
+    <div class="row">
+
+
+        <div *ngFor="let obj of heatmapData">
+
+
+            <div class="row">
+                <app-heatmap [queryData]="obj"></app-heatmap>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

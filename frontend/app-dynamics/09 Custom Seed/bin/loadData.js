@@ -4,6 +4,7 @@
 const dataLocation  = "/Users/dkandpal/Code/Repo/backup23/09\ Custom\ Seed/bin/data.csv";
 const elasticsearch = require('elasticsearch');
 const activeChannels = [];
+const commonUtility = require('../utility/common-utility');
 var esClient = new elasticsearch.Client({
     host: 'localhost:9200',
     log: 'trace'
@@ -69,9 +70,24 @@ exports.searchData = function(socket) {
 }
 
 
+exports.retrieveHeatMapData = function(httpResponse, requestData) {
+    const searchQuery = requestData.searchQuery;
+    const filterQuery = requestData.filterQuery;
 
+    esClient.search(getEsQuery(filterQuery, searchQuery, 5000), function(error, response) {
+        if(error) {
+            console.error("Error occured while retrieving result : " + error);
+        }
+        if(response) {
+            const totalHits = response.hits.hits.map(function(el) { return el._source});
 
-exports.retrieveMetricData = function(socket, requestData) {
+            return httpResponse.send({data : commonUtility.groupByDate(totalHits)});
+        }
+    });
+
+}
+
+exports.retrieveTimeSeriesMetricData = function(socket, requestData) {
     if(typeof  socketConnection === 'undefined') {
         console.log('Defining Socket Now!');
         socketConnection = socket;
@@ -84,20 +100,7 @@ exports.retrieveMetricData = function(socket, requestData) {
     const channelName = requestData.channelName;
     const startDate = requestData.startDate;
 
-    esClient.search({
-        index: 'apm-original',
-        body : {
-            "query": {
-                "bool": {
-                    "must": searchQuery,
-                    "filter": filterQuery
-                }
-            },
-            "sort" : [{"timestamp" : "asc"}],
-            "size" : "8"
-        },
-        _source : ["timestamp", "value"]
-    }, function(error, response) {
+    esClient.search(getEsQuery(filterQuery, searchQuery, 8), function(error, response) {
         if(error) {
             console.error("Error occured while retrieving result : " + error);
         }
@@ -113,6 +116,23 @@ exports.retrieveMetricData = function(socket, requestData) {
         }
     });
 
+}
+
+function getEsQuery(filterQuery, searchQuery, size) {
+    return {
+        index: 'apm-original',
+        body : {
+            "query": {
+                "bool": {
+                    "must": searchQuery,
+                    "filter": filterQuery
+                }
+            },
+            "sort" : [{"timestamp" : "asc"}],
+            "size" : size
+        },
+        _source : ["timestamp", "value"]
+    };
 }
 
 function queryElasticSearch(searchQuery, filterQuery) {
@@ -228,4 +248,8 @@ function storeData(data) {
         });
 
 }
+
+
+
+
 //module.exports = searchData;

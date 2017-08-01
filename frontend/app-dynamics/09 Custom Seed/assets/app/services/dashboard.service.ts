@@ -12,6 +12,29 @@ export class DashboardService {
     private socket;
     public observable;
 
+    p1 = new RegExp("%", 'g')
+    p2 = new RegExp('\"', 'g');
+    p3 = new RegExp(' ', 'g');
+    p4  =new RegExp('[|]', 'g');
+    p5 = new RegExp('[(]', 'g');
+    p6 = new RegExp('[)]', 'g');
+    p7 = new RegExp(',','g');
+
+
+
+    cleanUrl(name) {
+    const folderName = name
+        .replace(this.p1, "%25")
+        .replace(this.p7, "%20")
+        .replace(this.p2, "%22")
+        .replace(this.p3, "%20")
+        .replace(this.p4, "%7C")
+        .replace(this.p5, "%28")
+        .replace(this.p6, "%29");
+    return folderName;
+}
+
+
 
     constructor(private http: Http, private cachedDataService : CachedDataService) {
         this.socket  = io(this.url);
@@ -40,17 +63,21 @@ export class DashboardService {
 
     }
 
+    public getHeatMapData(queryData) {
+        const path = this.cleanUrl(queryData.path.join('|'));
+        console.log('Calling HTTP : ' +'/applications/metrics/'+queryData.application+'/heatmap?'+
+            'path='+path+
+            '&startDate='+queryData.startDate+'&endDate='+queryData.endDate);
+        return this.http.get('/applications/metrics/'+queryData.application+'/heatmap?'+
+            'path='+path+
+            '&startDate='+queryData.startDate+'&endDate='+queryData.endDate);
+    }
+
 
     private getOptionalParams() {
         const headers: Headers = new Headers({ 'Authorization': localStorage.getItem('authHeader') });
         return new RequestOptions({ headers: headers });
     }
-
-    public fetchData() {
-        return this.http.get('/fetchData', this.getOptionalParams());
-    }
-
-
 
     public initSocket(requestData) {
         // clear cached data service, because user selected a different pod, realm and app, do the same on server side too

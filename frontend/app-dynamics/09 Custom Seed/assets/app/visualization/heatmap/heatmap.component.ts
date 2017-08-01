@@ -24,22 +24,66 @@ import {color} from "d3-color";
 })
 export class HeatMapComponent implements OnInit {
     private data : Day[] = [];
+    private initData : Day[] = [];
+    private dayNumberMapping = {};
     private hourData = [];
     private margin = { top: 50, right: 20, bottom: 50, left: 100 };
-    private width = 1400 - this.margin.left - this.margin.right;
+    private width = 1200 - this.margin.left - this.margin.right;
     private height = 400 - this.margin.top - this.margin.bottom;
     private gridSize = Math.floor(this.width / 24);
     private legendElementWidth = this.gridSize*2;
     private buckets = 9;
     private colors = [100,200,300,400,500,600,700,800,900];
-    private days = ["June 20", "June 21", "June 22", "June 23"];
+    //private days = ["June 20", "June 21", "June 22", "June 23", "June 24"];
+    private days = [];
     private times = ['0', "1","2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
     //private artyom = Artyom.ArtyomBuilder.getInstance();
 
+    @Input()
+    queryData;
 
     ngOnInit() {
-        this.prepareData();
-    this.initSvg();
+
+        this.dashboardService.getHeatMapData(this.queryData).subscribe((response) => {
+
+            //this.prepareData();
+            console.log("out :" + JSON.stringify(response.json().data));
+            this.prepareNewData(response.json());
+            this.initSvg();
+        });
+
+
+    }
+
+    prepareNewData(response) {
+        let counter = 0;
+        const data = response.data;
+        for(var yearMonDateKey in data) {
+
+
+            for(var i=0; i< 24; i++) {
+                const day = new Day();
+                day.hourName = i;
+                day.dayName = counter;
+                day.value = 0;
+                this.data.push(day);
+            }
+
+
+            this.dayNumberMapping[counter] = yearMonDateKey;
+            this.days.push(yearMonDateKey);
+            const hours = data[yearMonDateKey].hour;
+            for(var hourKey in hours) {
+
+                const day = this.data.find((day) => {return day.dayName === counter && day.hourName === parseInt(hourKey);});
+                //const day = new Day();
+                day.dayName = counter;
+                day.hourName = parseInt(hourKey);
+                day.value = hours[hourKey].average;
+                //this.data.push(day);
+            }
+            counter++;
+        }
 
     }
 
@@ -95,6 +139,7 @@ export class HeatMapComponent implements OnInit {
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
+        // check for how to sort
         var dayLabel = svg.selectAll(".dayLabel")
             .data(this.days)
             .enter().append("text")
@@ -125,7 +170,9 @@ export class HeatMapComponent implements OnInit {
             .domain([0, this.buckets - 1, 600])
             .range(this.colors);
 
-        var cards = svg.selectAll(".hour")
+
+
+            var cards = svg.selectAll(".hour")
             .data(this.data, function(d : Day) {
                     return d.dayName + ":"+ d.hourName;
             });
@@ -146,8 +193,8 @@ export class HeatMapComponent implements OnInit {
                 .on('mouseout', (d) => {
                     div.transition().duration(500).style("opacity", 0);
                 })
-            .attr("x", (d : Day) => (d.hourName - 1) * this.gridSize)
-            .attr("y", (d : Day) => (d.dayName - 1) * this.gridSize)
+            .attr("x", (d : Day) => (d.hourName) * this.gridSize)
+            .attr("y", (d : Day) => (d.dayName) * this.gridSize)
             .attr("rx", 4)
             .attr("ry", 4)
             .attr("class", "hour bordered")
@@ -157,15 +204,18 @@ export class HeatMapComponent implements OnInit {
                 .transition()
             .duration(3000)
             .style("fill", (d : Day) => {
-            if(d.value < 200)
+                if(d.value === 0)
+                    return "#ffebee";
+            else if(d.value < 325)
                 return "#c8e6c9";
-            else if(d.value < 300) {
+            else if(d.value < 355) {
                 return "#fff59d";
-            } else if(d.value < 500) {
+            } else if(d.value < 370) {
                 return "#ffa726";
 
             } else {
                 return "#ff5722";
+
             }
         });
 
@@ -339,6 +389,7 @@ export class HeatMapComponent implements OnInit {
         this.getDays(2);
         this.getDays(3);
         this.getDays(4);
+        this.getDays(5);
 
 
     }
