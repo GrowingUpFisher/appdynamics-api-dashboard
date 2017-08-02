@@ -38,7 +38,10 @@ export class HeatMapComponent implements OnInit {
     private days = [];
     private times = ['0', "1","2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
     //private artyom = Artyom.ArtyomBuilder.getInstance();
-
+    private donutCheck = false;
+    private inputData : Day;
+    private boxColor;
+    private hourVal;
     @Input()
     queryData;
 
@@ -80,6 +83,7 @@ export class HeatMapComponent implements OnInit {
                 day.dayName = counter;
                 day.hourName = parseInt(hourKey);
                 day.value = hours[hourKey].average;
+                day.minuteValues = hours[hourKey].minute;
                 //this.data.push(day);
             }
             counter++;
@@ -180,7 +184,17 @@ export class HeatMapComponent implements OnInit {
 
             cards.enter()
             .append("rect").on('click', (d) => {
-                    this.onTileClick(d.dayName, d.hourName - 1, d.value);
+                    // this.onTileClick(d.dayName, d.hourName - 1, d.value);
+
+                console.log("d : " + d.value);
+                console.log("d : " + d.dayName);
+                console.log("d : " + d.hourName);
+
+                this.boxColor = d.value;
+                this.hourVal = d.hourName;
+                this.inputData = this.data.filter((d2) => d.dayName === d2.dayName && d.hourName === d2.hourName)[0];
+                this.donutCheck = true;
+                //this.onTileClick(d.dayName, d.hourName, d.value);
 
                 })
                 .on('mouseover', (d) => {
@@ -218,8 +232,6 @@ export class HeatMapComponent implements OnInit {
 
             }
         });
-
-
 
 
 

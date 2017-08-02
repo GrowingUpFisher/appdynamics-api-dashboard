@@ -26,6 +26,8 @@ import {VizDashboard} from "./viz-dashboard/viz-dashboard.component";
 import {DashboardService} from "./services/dashboard.service";
 import {ObjectTypeTransformer} from "./services/object-type-transform.pipe";
 import {NglModule} from 'ng-lightning/ng-lightning'
+import {DonutChart} from "./visualization/donut-chart/donut-chart.component";
+import {RtMultiseriesLineChart} from "./visualization/rt-multiseries-line-chart/rt-multiseries-line-chart.component";
 
 
 
@@ -35,7 +37,7 @@ import {NglModule} from 'ng-lightning/ng-lightning'
          ScatterPlotComponent, LineGraphComponent, StandaloneComponent, CompareComponent,
         StandaloneMetricViewComponent, BarGraphComponent, HeatMapComponent,
         TrendsComponent, MultiSeriesLineComponent, MultipleLineSeriesComponent, RTLineChart, HeatMapComponent,
-        CreateComponent, VizDashboard, ObjectTypeTransformer],
+        CreateComponent, VizDashboard, ObjectTypeTransformer, DonutChart, RtMultiseriesLineChart],
 
     imports: [BrowserModule, ReactiveFormsModule, FormsModule,
         HttpModule, APP_ROUTING, BrowserAnimationsModule, TreeModule],

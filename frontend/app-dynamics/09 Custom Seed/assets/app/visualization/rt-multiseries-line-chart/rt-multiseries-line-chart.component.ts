@@ -1,4 +1,7 @@
 /**
+ * Created by dkandpal on 8/2/17.
+ */
+/**
  * Created by dkandpal on 7/10/17.
  */
 import {Component, OnInit, OnChanges, Input, SimpleChanges, OnDestroy} from '@angular/core';
@@ -7,99 +10,46 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import * as d3 from 'd3/index';
 import {DashboardService} from "../../services/dashboard.service";
 import {CachedDataService} from "../../services/cached-data.service";
+import {CombinedMultipleLineSeriesData, MetaData, MultipleLineSeriesData} from "../../model/multiple-line-series-data";
 
 @Component({
-    selector: 'app-rt-line-chart',
-    templateUrl: './rt-line-chart.component.html',
-    styleUrls: ['./rt-line-chart.component.css']
+    selector: 'app-multi-rt-line-chart',
+    templateUrl: './rt-multiseries-line-chart.component.html',
+    styleUrls: ['./rt-multiseries-line-chart.component.css']
 })
-export class RTLineChart implements OnInit, OnChanges, OnDestroy {
+export class RtMultiseriesLineChart implements OnInit, OnChanges, OnDestroy {
 
 
 
-    art : AverageResponseTime;
-    @Input()
-    channelName : string;
+
+    // @Input()
+    // channelName : string;
+
     @Input()
     i;
+
     currentStart;
     currentEnd;
 
-
+    private combinedMultiSeries : CombinedMultipleLineSeriesData = new CombinedMultipleLineSeriesData();//data : MultipleLineSeriesData[] = [];
+    private colorScale : any;
 
     constructor(private dashboardService : DashboardService,
                 private cachedDataService : CachedDataService) {
-        this.art = new AverageResponseTime();
-    }
 
-
-    ngOnDestroy() {
-        this.cachedDataService.sliderPosition[this.channelName] = [this.currentStart, this.currentEnd];
     }
 
     ngOnInit() {
-
-        if(this.cachedDataService.masterData[this.channelName]) {
-            this.art = this.cachedDataService.masterData[this.channelName];
-            if(this.cachedDataService.sliderPosition[this.channelName]) {
-                const sliderPos = this.cachedDataService.sliderPosition[this.channelName];
-                this.currentStart = sliderPos[0];
-                this.currentEnd = sliderPos[1];
-            }
-            this.initLine();
-
-        }
-        this.observeSocketData();
-
+        this.generateData();
+        this.initLine();
     }
 
-    ngOnChanges(changes : SimpleChanges) {
+    ngOnChanges() {}
 
-
-        // if(changes['art']) {
-        //     this.initLine();
-        // }
-
-
-
-
-    }
-
-    public observeSocketData() {
-
-        this.dashboardService.observable.subscribe(s => {
-            if(s.channelName === this.channelName) {
-                const receivedChannelName = s.channelName;
-                const receivedData = s.data;
-                const masterData = this.cachedDataService.masterData;
-                let existingData = masterData[receivedChannelName];
-                if(typeof existingData === 'undefined') {
-                    console.log("Existing data for channel <" + receivedChannelName + "> does not exist");
-                    existingData = new AverageResponseTime();
-                } else {
-                    console.log("Existing data for channel <" + receivedChannelName + "> exist");
-
-                }
-
-                for(let el in receivedData) {
-                    let e = new OverallAverageResponseTime();
-                    e.timestamp = new Date(receivedData[el].timestamp);
-                    e.value = receivedData[el].value;
-                    existingData.data.push(e);
-                }
-                this.cachedDataService.masterData[receivedChannelName] = existingData;
-                this.art = existingData;
-                this.initLine();
-            }
-
-        });
-
-
-    }
-
-
+    ngOnDestroy() {}
 
     private initLine() {
+
 
         var svg : any;
         var chartGroup : any;
@@ -114,8 +64,8 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
 
         d3.select("div.multi-class-"+this.i).remove();
         // d3.select("svg.multi-class").remove();
-        var divElement = d3.select("div#rt-multiseries").append("div").attr("class", "multi-class-"+this.i);
-        divElement.append("h3").text(this.channelName);
+        var divElement = d3.select("div#rt-multiseries-2").append("div").attr("class", "multi-class-"+this.i);
+        divElement.append("h3").text('Multiple TS Graph');
 
 
 
@@ -123,45 +73,62 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
             .attr("width", width + 200)
             .attr("height", height + 200);
 
-        // svg = d3.select("div#rt-multiseries").append("svg").attr("class", "multi-class")
-        //     .attr("width", width + 200)
-        //     .attr("height", height + 200);
-
         chartGroup = svg.append("g")
             .attr("class", "chartGroup")
 
 
+
         var y = d3.scaleLinear()
-            .domain([d3.min(this.art.data, (d) => d.value), d3.max(this.art.data, (d) => d.value)])
+            .domain([
+
+                d3.min(this.combinedMultiSeries.data, (d) => {
+                    return d3.min(d.metaData, (md) => md.metricValue);
+                })
+                , d3.max(this.combinedMultiSeries.data, (d) => {
+                    return d3.max(d.metaData, (md) => md.metricValue);
+                })])
             .range([height, 0]);
 
-        var minTs = d3.min(this.art.data, (d) => d.timestamp);
-        var maxTs = d3.max(this.art.data, (d) => d.timestamp);
+
+
+
+        var minTs = d3.min(this.combinedMultiSeries.data, (d) => {
+            return d3.min(d.metaData, (md) => md.metricTimestamp);
+        });
+        var maxTs = d3.max(this.combinedMultiSeries.data,  (d) => {
+            return d3.max(d.metaData, (md) => md.metricTimestamp);
+        });
+
 
         var x = d3.scaleTime()
             .domain([
-                minTs
-                , maxTs])
+                d3.min(this.combinedMultiSeries.data, (d) => {
+                    return d3.min(d.metaData, (md) => md.metricTimestamp);
+                })
+
+                , d3.max(this.combinedMultiSeries.data, (d) => {
+                    return d3.max(d.metaData, (md) => md.metricTimestamp);
+                })])
             .range([0, width]);
+
+        this.colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(this.combinedMultiSeries.data.map(m => m.type));
 
 
         // new add on start
         var x2 = d3.scaleTime().domain(x.domain()).range([0, width]);
         var y2 = d3.scaleLinear().domain(y.domain()).range([height2, 0]);
 
-        // new add on end
-
         if(!this.currentStart) {
-        //    console.log("CURRENT START NOT DEFINED : " + this.art.data.length);
+            //    console.log("CURRENT START NOT DEFINED : " + this.art.data.length);
             this.currentStart = minTs;
         } else {
-           // console.log("CURRENT START DEFINED : " + this.currentStart);
+            // console.log("CURRENT START DEFINED : " + this.currentStart);
         }
         if(!this.currentEnd) {
-         //   console.log("CURRENT END NOT DEFINED : " + maxTs);
+            //   console.log("CURRENT END NOT DEFINED : " + maxTs);
             this.currentEnd = maxTs;
         } else {
-         //   console.log("CURRENT END DEFINED : " + this.currentEnd);
+            //   console.log("CURRENT END DEFINED : " + this.currentEnd);
         }
 
         var xAxis = d3.axisBottom(x);
@@ -217,13 +184,19 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
 
 
 
+
+
         var focus = chartGroup.append("g")
+            .data(this.combinedMultiSeries.data)
             .attr("class", "focus")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         var context = chartGroup.append("g")
+            .data(this.combinedMultiSeries.data)
             .attr("class", "context")
             .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+
 
 
         // new add on end
@@ -233,21 +206,39 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
         var line = d3.line().curve(d3.curveBasis).x(d => x(d[0])).y(d => y(d[1]));
 
         var finalArr = [];
-        for(var i =0; i< this.art.data.length; i++) {
-            var obj = [];
-            var temp = this.art.data[i];
-            obj.push(temp.timestamp);
-            obj.push(temp.value);
-            finalArr.push(obj);
+        var colorScheme = ['red', 'green', 'blue'];
+        for(var i=0; i<this.combinedMultiSeries.data.length; i++) {
+                const singleSeries = this.combinedMultiSeries.data[i];
+                const singleSeriesCordinates = [];
+            for(var j=0; j< singleSeries.metaData.length; j++) {
+                var obj = [];
+                var temp = singleSeries.metaData[j];
+                obj.push(temp.metricTimestamp);
+                obj.push(temp.metricValue);
+                singleSeriesCordinates.push(obj);
+            }
+            finalArr.push(singleSeriesCordinates);
+
         }
-        focus.append("path").datum(finalArr)
-            .attr("fill", "none")
-            .attr("class", "area")
-            .attr("stroke", "steelblue")
-            .attr("stroke-linejoin", "round")
-            .attr("stroke-linecap", "round")
-            .attr("stroke-width", 1.5)
-            .attr("d", line);
+
+
+        for(var i=0; i< finalArr.length; i++) {
+            console.log('i ' +i + ":" +finalArr[i]);
+            focus.append("path").datum(finalArr[i])
+                .attr("fill", "none")
+                .attr("class", "area"+i)
+                .attr("stroke", colorScheme[i])
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 1.5)
+                .attr("d", line);
+
+        }
+
+
+
+
+
 
         focus.append("g")
             .attr("class", "axis axis--x")
@@ -260,14 +251,20 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
             .call(yAxis);
 
 
-        context.append("path").datum(finalArr)
-            .attr("fill", "none")
-            .attr("class", "area")
-            .attr("stroke", "steelblue")
-            .attr("stroke-linejoin", "round")
-            .attr("stroke-linecap", "round")
-            .attr("stroke-width", 1.5)
-            .attr("d", line2);
+      for(var i=0; i<finalArr.length; i++) {
+
+
+          context.append("path").datum(finalArr[i])
+              .attr("fill", "none")
+              .attr("class", "area")
+              .attr("stroke", colorScheme[i])
+              .attr("stroke-linejoin", "round")
+              .attr("stroke-linecap", "round")
+              .attr("stroke-width", 1.5)
+              .attr("d", line2);
+
+
+      }
 
         context.append("g")
             .attr("class", "axis axis--x")
@@ -278,8 +275,8 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
         //     .attr("class", "brush")
         //     .call(brush)
         //     .call(brush.move, x.range());
-     //   console.log("x2 start : " + x2(this.currentStart));
-       // console.log("x2(this.currentEnd) :  " + x2(this.currentEnd));
+        //   console.log("x2 start : " + x2(this.currentStart));
+        // console.log("x2(this.currentEnd) :  " + x2(this.currentEnd));
 
         if(this.currentStart && this.currentEnd) {
             context.append("g")
@@ -340,7 +337,7 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
             if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
 
             var t = d3.event.transform;
-         //   console.log("Called zoom : " + t);
+            //   console.log("Called zoom : " + t);
             x.domain(t.rescaleX(x2).domain());
             focus.select(".area").attr("d", line);
             focus.select(".axis--x").call(xAxis);
@@ -349,20 +346,42 @@ export class RTLineChart implements OnInit, OnChanges, OnDestroy {
         }
 
 
+
     }
 
+    private generateData() {
+        let arr = ['ART', 'HeapSize', 'MemoryUsage'];
+        const tempArr = [];
+        let current = [1499270222623,1499260222623,1499250222623,1499240222623,1499230222623,1499220222623,1499210222623,1499200222623];
+        for(var i =0; i < arr.length; i++) {
+            let metric = new MultipleLineSeriesData();
+            metric.type = arr[i];
 
-    update(start, end) {
-        this.currentStart = start;
-        this.currentEnd = end;
+            for(var p =0; p< 8; p++) {
+
+
+                let newDate = new Date(current[p]);
+                let metaData = new MetaData();
+
+                metaData.metricValue = this.getRandomData();
+                metaData.metricTimestamp = newDate;
+
+                metric.metaData.push(metaData);
+
+            }
+            tempArr.push(metric);
+        }
+
+        this.combinedMultiSeries.data = tempArr;
+
+
+
+
     }
 
-
-
-
-
-
-
+    private getRandomData() {
+        return 100 + Math.floor(Math.random() * 500);
+    }
 
 
 }

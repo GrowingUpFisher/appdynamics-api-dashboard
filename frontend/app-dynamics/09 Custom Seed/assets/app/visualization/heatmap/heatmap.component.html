@@ -3,13 +3,18 @@
 <div class="container">
 <h3>{{queryData.path}}</h3>
 </div>
-
+<!--
 <input class= "btn btn-danger" type="button" (click) = "stopArtyom()" value = "Stop Voice" style="float: right; margin-left: 3px ; margin-right: 10px">
-<input class= "btn btn-success" type="button" (click) = "startArtyom()" value = "Start Voice" style="float: right;margin-left: 10px"><br>
+<input class= "btn btn-success" type="button" (click) = "startArtyom()" value = "Start Voice" style="float: right;margin-left: 10px"><br> -->
 
 <div id="chart"></div>
+<div class="row" *ngIf="donutCheck">
 <br>
 <hr>
+    <donut-chart [inputData]="inputData" [boxColor]="boxColor" [hourVal] = "hourVal"></donut-chart>
+</div>
+
+<!--
 <div class="container">
 <section class="row">
     <div class="col-6 col-sm-3">
@@ -37,4 +42,4 @@
         </div>
     </div>
 </section>
-</div>
+</div> -->

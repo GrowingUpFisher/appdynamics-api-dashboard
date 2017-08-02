@@ -7,6 +7,7 @@ export class Day {
     dayName : number;
     hourName : number;
     value : number;
+    minuteValues = {};
 
 }
 
