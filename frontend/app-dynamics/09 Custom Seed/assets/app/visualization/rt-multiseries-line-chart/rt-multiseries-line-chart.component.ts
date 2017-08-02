@@ -226,7 +226,7 @@ export class RtMultiseriesLineChart implements OnInit, OnChanges, OnDestroy {
             console.log('i ' +i + ":" +finalArr[i]);
             focus.append("path").datum(finalArr[i])
                 .attr("fill", "none")
-                .attr("class", "area"+i)
+                .attr("class", "area")
                 .attr("stroke", colorScheme[i])
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-linecap", "round")
@@ -303,7 +303,16 @@ export class RtMultiseriesLineChart implements OnInit, OnChanges, OnDestroy {
 
 
             x.domain(s.map(x2.invert, x2));
-            focus.select(".area").attr("d", line);
+
+            focus.selectAll(".area").attr("d", line);
+
+            // focus.selectAll("path").attr("d", (d) => {
+            //     if(d != null) {
+            //         console.log("d on focus: " + JSON.stringify(d));
+            //         return line(d);
+            //     }
+            //
+            // });
             focus.select(".axis--x").call(xAxis);
             svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
                 .scale(width / (s[1] - s[0]))
@@ -339,7 +348,16 @@ export class RtMultiseriesLineChart implements OnInit, OnChanges, OnDestroy {
             var t = d3.event.transform;
             //   console.log("Called zoom : " + t);
             x.domain(t.rescaleX(x2).domain());
-            focus.select(".area").attr("d", line);
+
+            focus.selectAll(".area").attr("d", line);
+
+            // focus.selectAll("path").attr("d", (d) => {
+            //     if(d != null) {
+            //         console.log("d on focus: " + JSON.stringify(d));
+            //         return line(d);
+            //     }
+            // });
+
             focus.select(".axis--x").call(xAxis);
 
             context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
