@@ -1,0 +1,6 @@
+wsOutlier pending features:
+
+1. (prepBatch.java) Aggregation of 1h is supported as of now. Need to support 1w, 1m, 6m, etc.
+2. (feedBatch.java) The width and window attributes should be dependent on number of observed points in time series. If it is too low, the default of 60 and 60 respectively will not work. As of now, if agg = 1h I have set width as 4 and window as 12, which works for 68 points. If it is anything less than 300 points, width and window should also be lower. If it is above a threshold (say >300) then default 60/60 can be used.
+3. (MetricGroup.java) The gname is used to fetch the endpoints of a group from populateEndpoints(). As of now, the jsonlet members in endpointList is hardcoded. Need to drive this off of a RDBMS or Redis. Group specifications should be stored in a schema in DB.
+4. (feedBatch.java) The paths where the plots are saved (and consequently picked up from), for display into HTML report, is hardcoded to /Users/xyz/Documents/RPlotPNG/. This needs to be pointed to the appropriate tomcat Webapp directory in production server. Also, the filename1 and filename2 is hardcoded to ahull_ and plots_ respectively. This needs to be driven off of the requesting thread ID (say ahull_<threadID>), so that concurrent client requests can be served unique plots that are generated from R.
