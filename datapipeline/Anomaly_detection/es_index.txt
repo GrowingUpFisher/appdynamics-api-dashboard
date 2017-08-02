@@ -1,0 +1,29 @@
+curl -XPUT 'http://localhost:9200/apm-anomaly/' -d '
+{
+    "settings" : {
+        "number_of_shards" : 3, 
+        "number_of_replicas" : 1
+    },
+    "mappings" : {
+        "appd" : {
+            "_all" : { "enabled" : false },
+            "properties" : {
+                "application" : { "type" : "keyword", "index": "not_analyzed" },
+
+                "pl1" : { "type" : "keyword", "index": "not_analyzed" },
+                "pl2" : { "type" : "keyword", "index": "not_analyzed" },
+                "pl3" : { "type" : "keyword", "index": "not_analyzed" },
+                "pl4" : { "type" : "keyword", "index": "not_analyzed" },
+                "pl5" : { "type" : "keyword", "index": "not_analyzed" },
+                "pl6" : { "type" : "keyword", "index": "not_analyzed" },
+                "pl7" : { "type" : "keyword", "index": "not_analyzed" },
+                "pl8" : { "type" : "keyword", "index": "not_analyzed" },
+                
+                "timestamp" : { "type" : "date", "index": "not_analyzed" },
+                "value" : { "type" : "long", "index": "not_analyzed" },
+
+                "anomaly" : { "type" : "keyword", "index": "not_analyzed" }
+            }
+        }
+    }
+}'
