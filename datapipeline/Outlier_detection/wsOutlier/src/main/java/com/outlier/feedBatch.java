@@ -108,13 +108,15 @@ public class feedBatch {
 		if(pb.getGb().getRawDataExcluded().size() > 0) {
 			htm.append("<h3>Excluded Time Series:</h3>");
 			htm.append("<table id=\"t01\" style=\"width:100%\">");
-			htm.append("<tr>     <th>SR No.</th>     <th>Series</th>      <th>Path</th>   </tr>");
+			htm.append("<tr>     <th>SR No.</th>     <th>Series</th>      <th>Path</th>      <th>Reason</th>   </tr>");
 			
-			for(int i=0; i<pb.getGb().getRawDataExcluded().size(); i++) {
+			int cnt = 0;
+			for(String pth : pb.getGb().getRawDataExcluded().keySet()) {
 				htm.append("<tr>");
-				htm.append("<td>"+(i+1)+"</td>");
-				htm.append("<td>"+"Series "+(i+1)+"</td>");
-				htm.append("<td>"+pb.getMatrixMap(false).get(score[i+1])+"</td>");
+				htm.append("<td>"+(++cnt)+"</td>");
+				htm.append("<td>"+"NA"+"</td>");
+				htm.append("<td>"+pth+"</td>");
+				htm.append("<td>"+pb.getGb().getRawDataExcluded().get(pth).getReasonOddManOut()+"</td>");
 				htm.append("</tr>");
 			}
 			
